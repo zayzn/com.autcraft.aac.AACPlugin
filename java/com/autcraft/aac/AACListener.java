@@ -61,11 +61,6 @@ public class AACListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void playerMakesAACSelection(InventoryClickEvent e) {
 
-        Component inventoryTitle = e.getView().title();
-        Component GUITitle = Component.text(plugin.getConfig().getString("settings.title"));
-
-        if (!inventoryTitle.equals(GUITitle)) return;
-
         // Disable all number key interactions when this menu is open. NO SWITCHING ITEMS!
         if (e.getClick() == ClickType.NUMBER_KEY
                 || e.getCurrentItem() == null
@@ -74,6 +69,11 @@ public class AACListener implements Listener {
             e.setCancelled(true);
             return;
         }
+
+        Component inventoryTitle = e.getView().title();
+        Component GUITitle = Component.text(plugin.getConfig().getString("settings.title"));
+
+        if (!inventoryTitle.equals(GUITitle)) return;
 
         // Object vars
         Player player = (Player) e.getWhoClicked();
