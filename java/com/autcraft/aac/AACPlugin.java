@@ -66,9 +66,14 @@ public final class AACPlugin extends JavaPlugin {
      *
      */
     public void initializeStringMap(){
-        var loadedStrings = new HashMap<String, String>();
+        var section = getConfig().getConfigurationSection("strings");
+        if(section == null) {
+            getLogger().warning("missing configuration section: strings");
+            return;
+        }
         // Loop over strings section of config.yml
-        for( String path : getConfig().getConfigurationSection("strings").getKeys(false) ){
+        var loadedStrings = new HashMap<String, String>();
+        for( String path : section.getKeys(false) ){
             loadedStrings.put(path, getConfig().getString("strings." + path, "String not found: " + path));
         }
         this.stringMap.clear();
