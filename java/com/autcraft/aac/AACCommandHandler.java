@@ -2,6 +2,7 @@ package com.autcraft.aac;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,9 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class AACCommandHandler implements CommandExecutor, TabCompleter {
     private final AACPlugin plugin;
@@ -109,16 +108,41 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        List<String> options = new ArrayList<>();
-
-        if( args.length == 1 ){
-            options.add("get");
-            options.add("reload");
-        }
-        Collections.sort(options);
-        if(!options.isEmpty())
-            return options;
-
-        return null;
+        return switch (args.length) {
+            case 0 -> onTabCompleteNoArgs(commandSender);
+            case 1 -> onTabCompleteArgs1(commandSender, args);
+            case 2 -> onTabCompleteArgs2(commandSender, args);
+            default -> null;
+        };
     }
+
+    private List<String> onTabCompleteNoArgs(CommandSender sender) {
+        var r = new TreeSet<String>();
+        if(sender instanceof Player) r.add("get");
+        r.add("give");
+        r.add("reload");
+        return r.stream().toList();
+    }
+
+    private List<String> onTabCompleteArgs1(CommandSender sender, String[] args) {
+        if("give".equals(args[0])) {
+            return Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .toList();
+        }
+        var options = onTabCompleteNoArgs(sender);
+        return options.contains(args[0]) ? Collections.emptyList() : options;
+    }
+
+    private List<String> onTabCompleteArgs2(CommandSender sender, String[] args) {
+        if(!"give".equals(args[0])) {
+            return Collections.emptyList();
+        }
+        return Bukkit.getOnlinePlayers().stream()
+                .map(Player::getName)
+                .filter(s -> s.startsWith(args[1]))
+                .sorted()
+                .toList();
+    }
+
 }
