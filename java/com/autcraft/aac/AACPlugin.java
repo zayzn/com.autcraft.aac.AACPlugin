@@ -83,14 +83,6 @@ public final class AACPlugin extends JavaPlugin {
     }
 
     /**
-     * Clear the string map for config reload purpoases
-     *
-     */
-    public void clearStringMap(){
-        stringMap.clear();
-    }
-
-    /**
      * Return true or false if player is still within the cooldown cache
      *
      * @param player
