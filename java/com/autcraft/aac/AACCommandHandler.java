@@ -78,7 +78,7 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
         // If the player is trying to give the book to another player
         if( args[0].equalsIgnoreCase("give") ){
             // Error: Invalid permission
-            if( !commandSender.hasPermission("aac.reload") ) {
+            if( !commandSender.hasPermission("aac.give") ) {
                 commandSender.sendMessage(plugin.errorMessage("error_no_permission"));
                 return true;
             }
