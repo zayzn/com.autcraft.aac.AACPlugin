@@ -115,11 +115,4 @@ public class AACListener implements Listener {
 
     }
 
-    public boolean compareMaterials(Material material, String icon) {
-        Material panelIcon = Material.getMaterial(icon.toUpperCase());
-        if (panelIcon == null)
-            return false;
-
-        return material == panelIcon;
-    }
 }
