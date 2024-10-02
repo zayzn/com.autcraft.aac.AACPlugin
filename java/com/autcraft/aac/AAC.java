@@ -1,8 +1,5 @@
 package com.autcraft.aac;
 
-import com.autcraft.aac.commands.MainCommand;
-import com.autcraft.aac.events.Click;
-import com.autcraft.aac.objects.InventoryGUI;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.kyori.adventure.text.Component;

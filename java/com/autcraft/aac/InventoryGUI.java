@@ -1,7 +1,5 @@
-package com.autcraft.aac.objects;
+package com.autcraft.aac;
 
-import com.autcraft.aac.AAC;
-import com.autcraft.aac.CreatePlayerHead;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
