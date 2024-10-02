@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class AACCommandHandler implements CommandExecutor, TabCompleter {
-    AACPlugin plugin;
+    private final AACPlugin plugin;
 
     public AACCommandHandler(AACPlugin plugin){
         this.plugin = plugin;

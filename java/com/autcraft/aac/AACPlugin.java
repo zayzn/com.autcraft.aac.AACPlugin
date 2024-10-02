@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public final class AACPlugin extends JavaPlugin {
-    private Map<String, String> stringMap = new HashMap<>();
+    private final Map<String, String> stringMap = new HashMap<>();
     private InventoryGUI inventoryGUI;
     private Cache<UUID, Long> cooldown;
 

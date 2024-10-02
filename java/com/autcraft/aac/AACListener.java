@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 
 public class AACListener implements Listener {
-    AACPlugin plugin;
+    private final AACPlugin plugin;
 
     public AACListener(AACPlugin plugin) {
         this.plugin = plugin;

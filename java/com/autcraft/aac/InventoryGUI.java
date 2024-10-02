@@ -15,14 +15,14 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.*;
 
 public class InventoryGUI {
-    AACPlugin plugin;
+    private final AACPlugin plugin;
 
-    private Map<String, ItemStack> panelOptions = new HashMap<>();
-    private Map<String, String> panelTool = new HashMap<>();
-    private NamespacedKey namespacedKeyAACTool;
-    private NamespacedKey namespacedKey;
-    private NamespacedKey namespacedKeyNext;
-    private NamespacedKey namespacedKeyPrevious;
+    private final Map<String, ItemStack> panelOptions = new HashMap<>();
+    private final Map<String, String> panelTool = new HashMap<>();
+    private final NamespacedKey namespacedKeyAACTool;
+    private final NamespacedKey namespacedKey;
+    private final NamespacedKey namespacedKeyNext;
+    private final NamespacedKey namespacedKeyPrevious;
 
 
     public InventoryGUI(AACPlugin plugin, String namespaceKey) {
