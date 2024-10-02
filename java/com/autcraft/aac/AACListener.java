@@ -12,9 +12,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class AACListener implements Listener {
     private final AACPlugin plugin;
+    private final Map<UUID, Long> cooldown = new ConcurrentHashMap<>();
 
     public AACListener(AACPlugin plugin) {
         this.plugin = plugin;
@@ -93,9 +98,9 @@ public class AACListener implements Listener {
 
             // So long as the output isn't blank, send it to the chat
             if (output != null) {
-                if (plugin.isInCooldown(player)) {
+                if (isInCooldown(player)) {
                     HashMap<String, String> replacements = new HashMap<>();
-                    replacements.put("{SECONDS}", "" + plugin.getCooldownRemaining(player));
+                    replacements.put("{SECONDS}", "" + getCooldownRemaining(player));
 
                     player.sendMessage(plugin.errorMessage("error_player_in_cooldown", replacements));
                 } else {
@@ -103,7 +108,7 @@ public class AACListener implements Listener {
                     player.chat(output);
 
                     // Message sent successfully, now apply cooldown
-                    plugin.addPlayerCooldown(player);
+                    addPlayerCooldown(player);
                 }
             } else {
                 plugin.toConsole("Error: No output was stored because the plugin could not set the persistent data for the panel option.");
@@ -113,6 +118,44 @@ public class AACListener implements Listener {
         e.setCancelled(true);
         player.updateInventory();
 
+    }
+
+    /**
+     * Return true or false if player is still within the cooldown cache
+     *
+     * @param player
+     * @return
+     */
+    private boolean isInCooldown(Player player){
+        var pid = player.getUniqueId();
+        if (cooldown.containsKey(pid)) {
+            if (cooldown.get(pid) - System.currentTimeMillis() > 0L) {
+                return true;
+            } else {
+                cooldown.remove(pid);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get the amount of time remaining before next message can be sent
+     *
+     * @param player
+     * @return
+     */
+    private long getCooldownRemaining(Player player){
+        return TimeUnit.MILLISECONDS.toSeconds(cooldown.get(player.getUniqueId()) - System.currentTimeMillis());
+    }
+
+    /**
+     * Add player to the cooldown cache
+     *
+     * @param player
+     */
+    private void addPlayerCooldown(Player player){
+        int cooldown_in_seconds = plugin.getConfig().getInt("settings.cooldown_in_seconds") * 1000;
+        cooldown.put(player.getUniqueId(), System.currentTimeMillis() + cooldown_in_seconds);
     }
 
 }

@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 
 public final class AACPlugin extends JavaPlugin {
     private final Map<String, String> stringMap = new HashMap<>();
-    private final Map<UUID, Long> cooldown = new ConcurrentHashMap<>();
     private InventoryGUI inventoryGUI;
 
     @Override
@@ -83,44 +82,6 @@ public final class AACPlugin extends JavaPlugin {
      */
     public String getString(String key){
         return stringMap.get(key);
-    }
-
-    /**
-     * Return true or false if player is still within the cooldown cache
-     *
-     * @param player
-     * @return
-     */
-    public boolean isInCooldown(Player player){
-        var pid = player.getUniqueId();
-        if (cooldown.containsKey(pid)) {
-           if (cooldown.get(pid) - System.currentTimeMillis() > 0L) {
-               return true;
-           } else {
-               cooldown.remove(pid);
-           }
-        }
-        return false;
-    }
-
-    /**
-     * Get the amount of time remaining before next message can be sent
-     *
-     * @param player
-     * @return
-     */
-    public long getCooldownRemaining(Player player){
-        return TimeUnit.MILLISECONDS.toSeconds(cooldown.get(player.getUniqueId()) - System.currentTimeMillis());
-    }
-
-    /**
-     * Add player to the cooldown cache
-     *
-     * @param player
-     */
-    public void addPlayerCooldown(Player player){
-        int cooldown_in_seconds = getConfig().getInt("settings.cooldown_in_seconds") * 1000;
-        cooldown.put(player.getUniqueId(), System.currentTimeMillis() + cooldown_in_seconds);
     }
 
     public void debug(String string){
