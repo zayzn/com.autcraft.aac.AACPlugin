@@ -232,7 +232,7 @@ public class InventoryGUI {
         String title = plugin.getConfig().getString("settings.title");
 
         // Create the inventory
-        Inventory inventory = plugin.getServer().createInventory(player, inventorySize, title);
+        Inventory inventory = plugin.getServer().createInventory(player, inventorySize, Component.text(title));
 
         /*
          Loop over panel options to populate inventory
