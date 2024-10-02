@@ -41,12 +41,6 @@ public final class AACPlugin extends JavaPlugin {
         getLogger().info("AAC - Augmentative and Alternative Communication initialized");
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-        getLogger().info("AAC is no longer available for communicating.");
-    }
-
     /**
      * Reload information from config.yml
      */
