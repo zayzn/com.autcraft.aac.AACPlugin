@@ -109,7 +109,7 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
         return switch (args.length) {
             case 0 -> onTabCompleteNoArgs(commandSender);
             case 1 -> onTabCompleteArgs1(commandSender, args);
-            case 2 -> onTabCompleteArgs2(commandSender, args);
+            case 2 -> onTabCompleteArgs2(args);
             default -> null;
         };
     }
@@ -130,7 +130,7 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
         return options.contains(args[0]) ? Collections.emptyList() : options;
     }
 
-    private List<String> onTabCompleteArgs2(CommandSender sender, String[] args) {
+    private List<String> onTabCompleteArgs2(String[] args) {
         if (!"give".equals(args[0])) {
             return Collections.emptyList();
         }

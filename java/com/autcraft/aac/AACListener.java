@@ -32,7 +32,7 @@ public class AACListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void playerOpensInventoryGUI(PlayerInteractEvent e) {
-        if(e.getAction() == Action.PHYSICAL) return;
+        if (e.getAction() == Action.PHYSICAL) return;
 
         Player player = e.getPlayer();
         InventoryGUI inventoryGUI = plugin.getInventoryGUI();
@@ -40,7 +40,7 @@ public class AACListener implements Listener {
         ItemStack itemOffHand = player.getInventory().getItemInOffHand();
 
         // The AAC tool has to be in either the main hand or offhand to work
-        if(!inventoryGUI.isItemPanelTool(item) || !inventoryGUI.isItemPanelTool(itemOffHand)) return;
+        if (!inventoryGUI.isItemPanelTool(item) || !inventoryGUI.isItemPanelTool(itemOffHand)) return;
 
         // If, for whatever reason, the player doesn't have permission to open the gui
         if (!player.hasPermission("aac.open")) {
@@ -64,7 +64,7 @@ public class AACListener implements Listener {
         Component inventoryTitle = e.getView().title();
         Component GUITitle = Component.text(plugin.getConfig().getString("settings.title"));
 
-        if(!inventoryTitle.equals(GUITitle)) return;
+        if (!inventoryTitle.equals(GUITitle)) return;
 
         // Disable all number key interactions when this menu is open. NO SWITCHING ITEMS!
         if (e.getClick() == ClickType.NUMBER_KEY
@@ -126,7 +126,7 @@ public class AACListener implements Listener {
      * @param player
      * @return
      */
-    private boolean isInCooldown(Player player){
+    private boolean isInCooldown(Player player) {
         var pid = player.getUniqueId();
         if (cooldown.containsKey(pid)) {
             if (cooldown.get(pid) - System.currentTimeMillis() > 0L) {
@@ -144,7 +144,7 @@ public class AACListener implements Listener {
      * @param player
      * @return
      */
-    private long getCooldownRemaining(Player player){
+    private long getCooldownRemaining(Player player) {
         return TimeUnit.MILLISECONDS.toSeconds(cooldown.get(player.getUniqueId()) - System.currentTimeMillis());
     }
 
@@ -153,7 +153,7 @@ public class AACListener implements Listener {
      *
      * @param player
      */
-    private void addPlayerCooldown(Player player){
+    private void addPlayerCooldown(Player player) {
         int cooldown_in_seconds = plugin.getConfig().getInt("settings.cooldown_in_seconds") * 1000;
         cooldown.put(player.getUniqueId(), System.currentTimeMillis() + cooldown_in_seconds);
     }
