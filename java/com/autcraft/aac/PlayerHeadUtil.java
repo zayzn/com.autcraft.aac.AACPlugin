@@ -25,7 +25,7 @@ import java.util.UUID;
 
 public class PlayerHeadUtil {
 
-    JSONParser PARSER = new JSONParser();
+    private static final JSONParser PARSER = new JSONParser();
 
     /**
      * Retrieve a player head just from a player's name
@@ -33,7 +33,7 @@ public class PlayerHeadUtil {
      * @param playerName
      * @return
      */
-    public ItemStack getSkull(String playerName, List<Component> lore) {
+    public static ItemStack getSkull(String playerName, List<Component> lore) {
         String uuid = null;
         String texture = null;
         try {
@@ -62,7 +62,7 @@ public class PlayerHeadUtil {
         return getSkull(UUID.randomUUID(), texture, Component.text(playerName), lore);
     }
 
-    public ItemStack getSkull(UUID uuid, String texture, Component customName, List<Component> lore) {
+    public static ItemStack getSkull(UUID uuid, String texture, Component customName, List<Component> lore) {
         // Create the item stack in advance
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
@@ -116,7 +116,7 @@ public class PlayerHeadUtil {
      * @throws IOException
      * @throws ParseException
      */
-    public String getUUIDFromMojangByName(String name) throws IOException, ParseException {
+    public static String getUUIDFromMojangByName(String name) throws IOException, ParseException {
         String uuid = null;
 
         // First obvious method is to just get it from the server itself.
@@ -182,7 +182,7 @@ public class PlayerHeadUtil {
      * @throws IOException
      * @throws org.json.simple.parser.ParseException
      */
-    public String getSkinTextureByUUID(UUID uuid) throws IOException, org.json.simple.parser.ParseException {
+    public static String getSkinTextureByUUID(UUID uuid) throws IOException, org.json.simple.parser.ParseException {
         String texture = null;
         String apiURL = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString();
 
@@ -234,7 +234,7 @@ public class PlayerHeadUtil {
      * @param base64
      * @return
      */
-    private String getSkinURLFromString(String base64) {
+    private static String getSkinURLFromString(String base64) {
         //String url = Base64.getEncoder().withoutPadding().encodeToString(texture.getBytes());
         Base64.Decoder dec = Base64.getDecoder();
         String decoded = new String(dec.decode(base64));
@@ -253,7 +253,7 @@ public class PlayerHeadUtil {
      * @throws UnsupportedEncodingException
      * @throws org.json.simple.parser.ParseException
      */
-    private String getSkinURLFromMojang(String base64) throws UnsupportedEncodingException, org.json.simple.parser.ParseException {
+    private static String getSkinURLFromMojang(String base64) throws UnsupportedEncodingException, org.json.simple.parser.ParseException {
         String texture = null;
         String decodedBase64 = new String(Base64.getDecoder().decode(base64), "UTF-8");
         JSONObject base64json = (JSONObject) PARSER.parse(decodedBase64);
@@ -264,4 +264,7 @@ public class PlayerHeadUtil {
         }
         return texture;
     }
+
+    private PlayerHeadUtil() {}
+
 }

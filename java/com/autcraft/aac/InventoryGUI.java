@@ -148,8 +148,7 @@ public class InventoryGUI {
                 // Prioritize texture. If they entered one, they probably want it.
                 if (!texture.isEmpty()) {
                     // Create the player head with texture and other info
-                    PlayerHeadUtil playerHead = new PlayerHeadUtil();
-                    itemStack = playerHead.getSkull(UUID.randomUUID(), texture, Component.text(playerName), lore);
+                    itemStack = PlayerHeadUtil.getSkull(UUID.randomUUID(), texture, Component.text(playerName), lore);
 
                     // If something failed in retrieving the skull, rather than just break completely, give the panel a blank player head
                     if (itemStack == null) {
@@ -159,8 +158,7 @@ public class InventoryGUI {
                 // Second is player name. If one is set, get the player's currect skin file
                 else if (!playerName.isEmpty()) {
                     // Create the player head with texture and other info
-                    PlayerHeadUtil playerHead = new PlayerHeadUtil();
-                    itemStack = playerHead.getSkull(playerName, lore);
+                    itemStack = PlayerHeadUtil.getSkull(playerName, lore);
 
                     // If something failed in retrieving the skull, rather than just break completely, give the panel a blank player head
                     if (itemStack == null) {
@@ -325,8 +323,7 @@ public class InventoryGUI {
         if (materialName.equalsIgnoreCase("PLAYER_HEAD")) {
 
             // Create the player head with texture and other info
-            PlayerHeadUtil playerHead = new PlayerHeadUtil();
-            itemStack = playerHead.getSkull(UUID.randomUUID(), texture, displayName, lore);
+            itemStack = PlayerHeadUtil.getSkull(UUID.randomUUID(), texture, displayName, lore);
 
         }
         // Any other material
@@ -376,8 +373,7 @@ public class InventoryGUI {
         if (materialName.equalsIgnoreCase("PLAYER_HEAD")) {
 
             // Create the player head with texture and other info
-            PlayerHeadUtil playerHead = new PlayerHeadUtil();
-            itemStack = playerHead.getSkull(UUID.randomUUID(), texture, displayName, lore);
+            itemStack = PlayerHeadUtil.getSkull(UUID.randomUUID(), texture, displayName, lore);
         }
         // Any other material
         else {
