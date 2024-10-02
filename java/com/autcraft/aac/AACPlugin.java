@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public final class AAC extends JavaPlugin {
+public final class AACPlugin extends JavaPlugin {
     private Map<String, String> stringMap = new HashMap<>();
     private InventoryGUI inventoryGUI;
     private Cache<UUID, Long> cooldown;
@@ -33,10 +33,10 @@ public final class AAC extends JavaPlugin {
         initializeStringMap();
 
         // Set commands
-        getCommand("aac").setExecutor(new MainCommand(this));
+        getCommand("aac").setExecutor(new AACCommandHandler(this));
 
         // Register events
-        getServer().getPluginManager().registerEvents(new Click(this), this);
+        getServer().getPluginManager().registerEvents(new AACListener(this), this);
 
         getLogger().info("AAC - Augmentative and Alternative Communication initialized");
     }

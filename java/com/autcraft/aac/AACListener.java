@@ -13,10 +13,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-public class Click implements Listener {
-    AAC plugin;
+public class AACListener implements Listener {
+    AACPlugin plugin;
 
-    public Click(AAC plugin) {
+    public AACListener(AACPlugin plugin) {
         this.plugin = plugin;
     }
 

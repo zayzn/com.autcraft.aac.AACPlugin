@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class CreatePlayerHead {
+public class PlayerHeadUtil {
 
     JSONParser PARSER = new JSONParser();
 

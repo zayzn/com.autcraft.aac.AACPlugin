@@ -15,7 +15,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.*;
 
 public class InventoryGUI {
-    AAC plugin;
+    AACPlugin plugin;
 
     private Map<String, ItemStack> panelOptions = new HashMap<>();
     private Map<String, String> panelTool = new HashMap<>();
@@ -25,7 +25,7 @@ public class InventoryGUI {
     private NamespacedKey namespacedKeyPrevious;
 
 
-    public InventoryGUI(AAC plugin, String namespaceKey) {
+    public InventoryGUI(AACPlugin plugin, String namespaceKey) {
         this.plugin = plugin;
         this.namespacedKeyAACTool = new NamespacedKey(plugin, "AAC_Tool");
         this.namespacedKey = new NamespacedKey(plugin, namespaceKey);
@@ -148,7 +148,7 @@ public class InventoryGUI {
                 // Prioritize texture. If they entered one, they probably want it.
                 if (!texture.isEmpty()) {
                     // Create the player head with texture and other info
-                    CreatePlayerHead playerHead = new CreatePlayerHead();
+                    PlayerHeadUtil playerHead = new PlayerHeadUtil();
                     itemStack = playerHead.getSkull(UUID.randomUUID(), texture, Component.text(playerName), lore);
 
                     // If something failed in retrieving the skull, rather than just break completely, give the panel a blank player head
@@ -159,7 +159,7 @@ public class InventoryGUI {
                 // Second is player name. If one is set, get the player's currect skin file
                 else if (!playerName.isEmpty()) {
                     // Create the player head with texture and other info
-                    CreatePlayerHead playerHead = new CreatePlayerHead();
+                    PlayerHeadUtil playerHead = new PlayerHeadUtil();
                     itemStack = playerHead.getSkull(playerName, lore);
 
                     // If something failed in retrieving the skull, rather than just break completely, give the panel a blank player head
@@ -325,7 +325,7 @@ public class InventoryGUI {
         if (materialName.equalsIgnoreCase("PLAYER_HEAD")) {
 
             // Create the player head with texture and other info
-            CreatePlayerHead playerHead = new CreatePlayerHead();
+            PlayerHeadUtil playerHead = new PlayerHeadUtil();
             itemStack = playerHead.getSkull(UUID.randomUUID(), texture, displayName, lore);
 
         }
@@ -376,7 +376,7 @@ public class InventoryGUI {
         if (materialName.equalsIgnoreCase("PLAYER_HEAD")) {
 
             // Create the player head with texture and other info
-            CreatePlayerHead playerHead = new CreatePlayerHead();
+            PlayerHeadUtil playerHead = new PlayerHeadUtil();
             itemStack = playerHead.getSkull(UUID.randomUUID(), texture, displayName, lore);
         }
         // Any other material

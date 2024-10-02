@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainCommand implements CommandExecutor, TabCompleter {
-    AAC plugin;
+public class AACCommandHandler implements CommandExecutor, TabCompleter {
+    AACPlugin plugin;
 
-    public MainCommand(AAC plugin){
+    public AACCommandHandler(AACPlugin plugin){
         this.plugin = plugin;
     }
 
