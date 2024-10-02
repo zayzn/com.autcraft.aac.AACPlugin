@@ -1,7 +1,5 @@
 package com.autcraft.aac;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
@@ -10,21 +8,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public final class AACPlugin extends JavaPlugin {
     private final Map<String, String> stringMap = new HashMap<>();
+    private final Map<UUID, Long> cooldown = new ConcurrentHashMap<>();
     private InventoryGUI inventoryGUI;
-    private Cache<UUID, Long> cooldown;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
         saveDefaultConfig();
-
-        // Set cooldown timer based on config setting in config.yml
-        int cooldown_timer = getConfig().getInt("settings.cooldown_in_seconds",5);
-        cooldown = CacheBuilder.newBuilder().expireAfterWrite(cooldown_timer, TimeUnit.SECONDS).build();
 
         // Initialize our Inventory GUI
         inventoryGUI = new InventoryGUI(this, "AAC");
@@ -97,7 +92,15 @@ public final class AACPlugin extends JavaPlugin {
      * @return
      */
     public boolean isInCooldown(Player player){
-        return cooldown.asMap().containsKey(player.getUniqueId());
+        var pid = player.getUniqueId();
+        if (cooldown.containsKey(pid)) {
+           if (cooldown.get(pid) - System.currentTimeMillis() > 0L) {
+               return true;
+           } else {
+               cooldown.remove(pid);
+           }
+        }
+        return false;
     }
 
     /**
@@ -107,7 +110,7 @@ public final class AACPlugin extends JavaPlugin {
      * @return
      */
     public long getCooldownRemaining(Player player){
-        return TimeUnit.MILLISECONDS.toSeconds(cooldown.asMap().get(player.getUniqueId()) - System.currentTimeMillis());
+        return TimeUnit.MILLISECONDS.toSeconds(cooldown.get(player.getUniqueId()) - System.currentTimeMillis());
     }
 
     /**
