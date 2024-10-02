@@ -86,7 +86,7 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
             // Error: /aac give command ran but no player provided.
             if( args.length == 1 ){
                 commandSender.sendMessage(plugin.errorMessage("error_player_not_provided"));
-                return true;
+                return false;
             }
 
             // Error: /aac give <player> command ran but player is not online
