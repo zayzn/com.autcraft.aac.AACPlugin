@@ -25,7 +25,6 @@ public class InventoryGUI {
     private final NamespacedKey namespacedKeyNext;
     private final NamespacedKey namespacedKeyPrevious;
 
-
     public InventoryGUI(AACPlugin plugin, String namespaceKey) {
         this.plugin = plugin;
         this.namespacedKeyAACTool = new NamespacedKey(plugin, "AAC_Tool");
@@ -60,9 +59,6 @@ public class InventoryGUI {
 
     /**
      * Return true or false if the item being checked has the persistent data container with AAC_Tool value stored.
-     *
-     * @param itemStack
-     * @return
      */
     public boolean isItemPanelTool(ItemStack itemStack) {
         if (itemStack == null) {
@@ -84,9 +80,6 @@ public class InventoryGUI {
 
     /**
      * Returns the String value of the persistent data container for itemstack specified
-     *
-     * @param itemStack
-     * @return
      */
     public String getPersistentDataContainer(ItemStack itemStack) {
         ItemMeta meta = itemStack.getItemMeta();
@@ -101,9 +94,6 @@ public class InventoryGUI {
 
     /**
      * Set the persistent data container for the item
-     *
-     * @param itemStack
-     * @param output
      */
     private void SetPersistentDataContainer(ItemStack itemStack, String output) {
         if (itemStack == null) {
@@ -213,9 +203,6 @@ public class InventoryGUI {
 
     /**
      * Returns the inventory/GUI for the clickable items
-     *
-     * @param player
-     * @return
      */
     public Inventory getGUI(Player player, int page) {
         int inventorySize = 54;
@@ -264,11 +251,8 @@ public class InventoryGUI {
         return inventory;
     }
 
-
     /**
      * Retrieve the panel tool item to put into the player's inventory when they run the command /aac get
-     *
-     * @return
      */
     public ItemStack getTool() {
         String displayName = panelTool.get("name");
@@ -298,8 +282,6 @@ public class InventoryGUI {
 
     /**
      * Generate and return the Next Button item stack
-     *
-     * @return
      */
     public ItemStack getNextButton(int page) {
         ItemStack itemStack;
@@ -352,8 +334,6 @@ public class InventoryGUI {
 
     /**
      * Generate and return the Previous Button item stack
-     *
-     * @return
      */
     public ItemStack getPreviousButton(int page) {
         ItemStack itemStack;
@@ -406,9 +386,6 @@ public class InventoryGUI {
 
     /**
      * Returns true or false if the persistent data exists within the item stack
-     *
-     * @param itemStack
-     * @return
      */
     public boolean isNextButton(ItemStack itemStack) {
         return itemStack.getItemMeta().getPersistentDataContainer().has(this.namespacedKeyNext);
