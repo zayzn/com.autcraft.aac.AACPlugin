@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public final class AACPlugin extends JavaPlugin {
     private final Map<String, String> stringMap = new HashMap<>();
@@ -23,7 +24,7 @@ public final class AACPlugin extends JavaPlugin {
         initializeStringMap();
 
         // Set commands
-        getCommand("aac").setExecutor(new AACCommandHandler(this));
+        Objects.requireNonNull(getCommand("aac")).setExecutor(new AACCommandHandler(this));
 
         // Register events
         getServer().getPluginManager().registerEvents(new AACListener(this), this);
