@@ -21,12 +21,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
-import java.text.ParseException;
-import java.util.Base64;
-import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class PlayerHeadUtil {
 
@@ -47,13 +45,7 @@ public class PlayerHeadUtil {
             // Retrieve the player's UUID if at all possible
             // If it fails, that player probably doesn't exist
             uuid = getUUIDFromMojangByName(playerName);
-        } catch (IOException | ParseException e) {
-            return null;
-        }
-
-        // Somehow mojang returned a blank uuid?
-        if (uuid == null) {
-            logger.error("Could not retrieve UUID for player {}. Using a Player Head for now but try \"/aac reload\" and see if it fixes it.", playerName);
+        } catch (Exception e) {
             return null;
         }
 
@@ -61,7 +53,7 @@ public class PlayerHeadUtil {
         // If it fails, it means that Mojang's servers are down.
         try {
             texture = getSkinTextureByUUID(UUID.fromString(uuid));
-        } catch (IOException | ParseException e) {
+        } catch (Exception e) {
             logger.warn("Unable to get skin for {}", uuid);
             return null;
         }
@@ -74,7 +66,7 @@ public class PlayerHeadUtil {
         // Create the item stack in advance
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        String url = null;
+        String url;
 
         // Depending on the length of the texture string, use the appropriate method to extra the URL
         if (texture.length() > 200) {
@@ -88,11 +80,11 @@ public class PlayerHeadUtil {
             url = getSkinURLFromString(texture);
         }
 
-        PlayerProfile profile = Bukkit.createPlayerProfile(uuid);
+        PlayerProfile profile = Bukkit.createProfile(uuid);
         PlayerTextures textures = profile.getTextures();
         URL urlObject;
         try {
-            urlObject = new URL(url); // The URL to the skin, for example: https://textures.minecraft.net/texture/18813764b2abc94ec3c3bc67b9147c21be850cdf996679703157f4555997ea63a
+            urlObject = URI.create(url).toURL(); // The URL to the skin, for example: https://textures.minecraft.net/texture/18813764b2abc94ec3c3bc67b9147c21be850cdf996679703157f4555997ea63a
         } catch (MalformedURLException e) {
             logger.error("Invalid URL {}", url);
             throw new RuntimeException(e);
@@ -101,7 +93,7 @@ public class PlayerHeadUtil {
         profile.setTextures(textures); // Set the textures back to the profile
 
         // Set all that data to the itemstack metadata
-        meta.setOwnerProfile(profile);
+        meta.setOwningPlayer(Bukkit.getOfflinePlayer(Objects.requireNonNull(uuid)));
 
         // Display name
         if (customName != null) {
@@ -136,7 +128,7 @@ public class PlayerHeadUtil {
         }
 
         // If the server has no record of the player, get it from Mojang's API
-        URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + name);
+        URL url = URI.create("https://api.mojang.com/users/profiles/minecraft/" + name).toURL();
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -144,27 +136,21 @@ public class PlayerHeadUtil {
 
         validateResponse(conn.getResponseCode());
 
-        if (responsecode != 200) {
-            //throw new RuntimeException("HttpResponseCode: " + responsecode);
-            return null;
-        } else {
-
-            String inline = "";
+            StringBuilder inline = new StringBuilder();
             Scanner scanner = new Scanner(url.openStream());
 
             //Write all the JSON data into a string using a scanner
             while (scanner.hasNext()) {
-                inline += scanner.nextLine();
+                inline.append(scanner.nextLine());
             }
 
             //Close the scanner
             scanner.close();
 
             //Using the JSON simple library parse the string into a json object
-            JSONParser parse = new JSONParser();
-            JSONObject data_obj = null;
+            JSONObject data_obj;
             try {
-                data_obj = (JSONObject) parse.parse(inline);
+                data_obj = (JSONObject) PARSER.parse(String.valueOf(inline));
             } catch (ParseException e) {
                 logger.error("Could not parse API response");
                 throw new RuntimeException(e);
@@ -174,7 +160,7 @@ public class PlayerHeadUtil {
             if (data_obj != null) {
                 uuid = data_obj.get("id").toString();
             }
-        }
+
         if (uuid != null) {
             String result = uuid;
             result = uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32);
@@ -200,17 +186,13 @@ public class PlayerHeadUtil {
         String texture = null;
         String apiURL = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString();
 
-        URL url = new URL(apiURL);
+        URL url = URI.create(apiURL).toURL();
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.connect();
 
-        int responsecode = conn.getResponseCode();
-
-        if (responsecode != 200) {
-            throw new RuntimeException("HttpResponseCode: " + responsecode);
-        } else {
+        validateResponse(conn.getResponseCode());
 
             String inline = "";
             Scanner scanner = new Scanner(url.openStream());
@@ -237,7 +219,6 @@ public class PlayerHeadUtil {
             //Get the required object from the above created object
             System.out.println(data_obj.values());
             texture = data_obj.get("properties").toString();
-        }
 
         return texture;
     }
@@ -269,7 +250,7 @@ public class PlayerHeadUtil {
      */
     private static @NotNull String getSkinURLFromMojang(@NotNull String base64) throws UnsupportedEncodingException, ParseException {
         String texture = null;
-        String decodedBase64 = new String(Base64.getDecoder().decode(base64), "UTF-8");
+        String decodedBase64 = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
         JSONObject base64json = (JSONObject) PARSER.parse(decodedBase64);
         JSONObject textures = (JSONObject) base64json.get("textures");
         if (textures.containsKey("SKIN")) {
