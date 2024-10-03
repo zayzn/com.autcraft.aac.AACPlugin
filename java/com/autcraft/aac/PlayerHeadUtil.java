@@ -34,7 +34,6 @@ public class PlayerHeadUtil {
 
     /**
      * Retrieve a player head just from a player's name
-     *
      */
     public static @Nullable ItemStack getSkull(@NotNull String playerName, @NotNull List<Component> lore) {
         String uuid;
@@ -60,7 +59,7 @@ public class PlayerHeadUtil {
         return getSkull(UUID.randomUUID(), texture, Component.text(playerName), lore);
     }
 
-    public static @NotNull ItemStack getSkull(@NotNull UUID uuid, @NotNull String texture, @Nullable Component customName, @NotNull List<Component> lore) {
+    public static @NotNull ItemStack getSkull(@NotNull UUID uuid, @NotNull String texture, @Nullable Component customName, @NotNull List<Component> lore) throws RuntimeException {
         // Create the item stack in advance
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
@@ -110,9 +109,8 @@ public class PlayerHeadUtil {
 
     /**
      * Retrieve the player's UUID from just their name
-     *
      */
-    public static @NotNull String getUUIDFromMojangByName(@NotNull String name) throws IOException, ParseException {
+    public static @NotNull String getUUIDFromMojangByName(@NotNull String name) throws IOException {
         String uuid = null;
 
         // First obvious method is to just get it from the server itself.
@@ -130,33 +128,33 @@ public class PlayerHeadUtil {
 
         validateResponse(conn.getResponseCode());
 
-            StringBuilder inline = new StringBuilder();
-            Scanner scanner = new Scanner(url.openStream());
+        StringBuilder inline = new StringBuilder();
+        Scanner scanner = new Scanner(url.openStream());
 
-            //Write all the JSON data into a string using a scanner
-            while (scanner.hasNext()) {
-                inline.append(scanner.nextLine());
-            }
+        //Write all the JSON data into a string using a scanner
+        while (scanner.hasNext()) {
+            inline.append(scanner.nextLine());
+        }
 
-            //Close the scanner
-            scanner.close();
+        //Close the scanner
+        scanner.close();
 
-            //Using the JSON simple library parse the string into a json object
-            JSONObject data_obj;
-            try {
-                data_obj = (JSONObject) PARSER.parse(String.valueOf(inline));
-            } catch (ParseException e) {
-                logger.error("Could not parse API response");
-                throw new RuntimeException(e);
-            }
+        //Using the JSON simple library parse the string into a json object
+        JSONObject data_obj;
+        try {
+            data_obj = (JSONObject) PARSER.parse(String.valueOf(inline));
+        } catch (ParseException e) {
+            logger.error("Could not parse API response");
+            throw new RuntimeException(e);
+        }
 
-            //Get the required object from the above created object
-            if (data_obj != null) {
-                uuid = data_obj.get("id").toString();
-            }
+        //Get the required object from the above created object
+        if (data_obj != null) {
+            uuid = data_obj.get("id").toString();
+        }
 
         if (uuid != null) {
-            String result = uuid;
+            String result;
             result = uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32);
             uuid = result;
         } else {
@@ -170,11 +168,10 @@ public class PlayerHeadUtil {
 
     /**
      * If getting a head for a player, we must retrieve the texture from Mojang's Session servers.
-     *
      */
     public static @NotNull String getSkinTextureByUUID(@NotNull UUID uuid) throws IOException, ParseException {
-        String texture = null;
-        String apiURL = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString();
+        String texture;
+        String apiURL = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid;
 
         URL url = URI.create(apiURL).toURL();
 
@@ -184,38 +181,37 @@ public class PlayerHeadUtil {
 
         validateResponse(conn.getResponseCode());
 
-            String inline = "";
-            Scanner scanner = new Scanner(url.openStream());
+        StringBuilder inline = new StringBuilder();
+        Scanner scanner = new Scanner(url.openStream());
 
-            //Write all the JSON data into a string using a scanner
-            while (scanner.hasNext()) {
-                inline += scanner.nextLine();
+        //Write all the JSON data into a string using a scanner
+        while (scanner.hasNext()) {
+            inline.append(scanner.nextLine());
+        }
+
+        //Close the scanner
+        scanner.close();
+
+        //Using the JSON simple library parse the string into a json object
+        JSONParser parse = new JSONParser();
+        JSONObject data_obj = (JSONObject) parse.parse(inline.toString());
+        JSONArray propertiesArray = (JSONArray) data_obj.get("properties");
+        for (JSONObject property : (List<JSONObject>) propertiesArray) {
+            String name = (String) property.get("name");
+            if (name.equals("textures")) {
+                return (String) property.get("value");
             }
+        }
 
-            //Close the scanner
-            scanner.close();
-
-            //Using the JSON simple library parse the string into a json object
-            JSONParser parse = new JSONParser();
-            JSONObject data_obj = (JSONObject) parse.parse(inline);
-            JSONArray propertiesArray = (JSONArray) data_obj.get("properties");
-            for (JSONObject property : (List<JSONObject>) propertiesArray) {
-                String name = (String) property.get("name");
-                if (name.equals("textures")) {
-                    return (String) property.get("value");
-                }
-            }
-
-            //Get the required object from the above created object
-            System.out.println(data_obj.values());
-            texture = data_obj.get("properties").toString();
+        //Get the required object from the above created object
+        System.out.println(data_obj.values());
+        texture = data_obj.get("properties").toString();
 
         return texture;
     }
 
     /**
      * Get Skin URL from string entered into config file
-     *
      */
     private static @NotNull String getSkinURLFromString(@NotNull String base64) {
         //String url = Base64.getEncoder().withoutPadding().encodeToString(texture.getBytes());
@@ -230,7 +226,6 @@ public class PlayerHeadUtil {
 
     /**
      * Get Skin URL from long string returned by Mojang's API
-     *
      */
     private static @NotNull String getSkinURLFromMojang(@NotNull String base64) throws UnsupportedEncodingException, ParseException {
         String texture = null;
