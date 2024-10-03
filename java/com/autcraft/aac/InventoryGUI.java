@@ -2,6 +2,7 @@ package com.autcraft.aac;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -124,7 +125,7 @@ public class InventoryGUI {
         panelOptions.clear();
 
         // Loop over the panel options in the config
-        for (String path : plugin.getConfig().getConfigurationSection("panel").getKeys(false)) {
+        for (String path : Objects.requireNonNull(plugin.getConfig().getConfigurationSection("panel")).getKeys(false)) {
             ItemStack itemStack = null;
             String panelItem = "panel." + path;
             String icon = plugin.getConfig().getString(panelItem + ".icon", "");
@@ -148,10 +149,9 @@ public class InventoryGUI {
                 // Prioritize texture. If they entered one, they probably want it.
                 if (!texture.isEmpty()) {
                     // Create the player head with texture and other info
-                    itemStack = PlayerHeadUtil.getSkull(UUID.randomUUID(), texture, Component.text(playerName), lore);
-
-                    // If something failed in retrieving the skull, rather than just break completely, give the panel a blank player head
-                    if (itemStack == null) {
+                    try {
+                        itemStack = PlayerHeadUtil.getSkull(UUID.randomUUID(), texture, Component.text(playerName), lore);
+                    } catch (Exception e) {
                         itemStack = new ItemStack(Material.PLAYER_HEAD, 1);
                     }
                 }
@@ -319,6 +319,10 @@ public class InventoryGUI {
         // Get material, if there is one
         Material material = Material.getMaterial(materialName.toUpperCase());
 
+        if (material == null) {
+            return errorItem(materialName);
+        }
+
         // If material is set to player_head
         if (materialName.equalsIgnoreCase("PLAYER_HEAD")) {
 
@@ -369,6 +373,10 @@ public class InventoryGUI {
         // Get material, if there is one
         Material material = Material.getMaterial(materialName.toUpperCase());
 
+        if (material == null) {
+            return errorItem(materialName);
+        }
+
         // If material is set to player_head
         if (materialName.equalsIgnoreCase("PLAYER_HEAD")) {
 
@@ -406,7 +414,7 @@ public class InventoryGUI {
         return itemStack.getItemMeta().getPersistentDataContainer().has(this.namespacedKeyNext);
     }
 
-    public int getNextPage(ItemStack itemStack) {
+    public Integer getNextPage(ItemStack itemStack) {
         return itemStack.getItemMeta().getPersistentDataContainer().get(this.namespacedKeyNext, PersistentDataType.INTEGER);
     }
 
@@ -414,7 +422,17 @@ public class InventoryGUI {
         return itemStack.getItemMeta().getPersistentDataContainer().has(this.namespacedKeyPrevious);
     }
 
-    public int getPreviousPage(ItemStack itemStack) {
+    public Integer getPreviousPage(ItemStack itemStack) {
         return itemStack.getItemMeta().getPersistentDataContainer().get(this.namespacedKeyPrevious, PersistentDataType.INTEGER);
     }
+
+    private ItemStack errorItem(String materialName) {
+        var item = new ItemStack(Material.BARRIER);
+        item.lore(List.of(
+                Component.text("Unknown material: ", TextColor.color(0, 0, 0), TextDecoration.BOLD)
+                        .append(Component.text(materialName))
+        ));
+        return item;
+    }
+
 }
