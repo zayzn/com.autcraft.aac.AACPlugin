@@ -35,8 +35,6 @@ public class PlayerHeadUtil {
     /**
      * Retrieve a player head just from a player's name
      *
-     * @param playerName
-     * @return
      */
     public static @Nullable ItemStack getSkull(@NotNull String playerName, @NotNull List<Component> lore) {
         String uuid;
@@ -113,10 +111,6 @@ public class PlayerHeadUtil {
     /**
      * Retrieve the player's UUID from just their name
      *
-     * @param name
-     * @return
-     * @throws IOException
-     * @throws ParseException
      */
     public static @NotNull String getUUIDFromMojangByName(@NotNull String name) throws IOException, ParseException {
         String uuid = null;
@@ -177,10 +171,6 @@ public class PlayerHeadUtil {
     /**
      * If getting a head for a player, we must retrieve the texture from Mojang's Session servers.
      *
-     * @param uuid
-     * @return
-     * @throws IOException
-     * @throws org.json.simple.parser.ParseException
      */
     public static @NotNull String getSkinTextureByUUID(@NotNull UUID uuid) throws IOException, ParseException {
         String texture = null;
@@ -226,8 +216,6 @@ public class PlayerHeadUtil {
     /**
      * Get Skin URL from string entered into config file
      *
-     * @param base64
-     * @return
      */
     private static @NotNull String getSkinURLFromString(@NotNull String base64) {
         //String url = Base64.getEncoder().withoutPadding().encodeToString(texture.getBytes());
@@ -243,10 +231,6 @@ public class PlayerHeadUtil {
     /**
      * Get Skin URL from long string returned by Mojang's API
      *
-     * @param base64
-     * @return
-     * @throws UnsupportedEncodingException
-     * @throws org.json.simple.parser.ParseException
      */
     private static @NotNull String getSkinURLFromMojang(@NotNull String base64) throws UnsupportedEncodingException, ParseException {
         String texture = null;
