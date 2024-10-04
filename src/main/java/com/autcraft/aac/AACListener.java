@@ -39,7 +39,8 @@ public class AACListener implements Listener {
         ItemStack itemOffHand = player.getInventory().getItemInOffHand();
 
         // The AAC tool has to be in either the main hand or offhand to work
-        if (!inventoryGUI.isItemPanelTool(item) || !inventoryGUI.isItemPanelTool(itemOffHand)) return;
+        var valid = inventoryGUI.isItemPanelTool(item) || inventoryGUI.isItemPanelTool(itemOffHand);
+        if (!valid) return;
 
         // If, for whatever reason, the player doesn't have permission to open the gui
         if (!player.hasPermission("aac.open")) {
