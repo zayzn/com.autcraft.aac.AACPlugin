@@ -1,8 +1,7 @@
 name: AAC
 version: '${version}'
-main: com.autcraft.aac.AAC
-api-version: '1.20'
-load: STARTUP
+main: com.autcraft.aac.AACPlugin
+api-version: '1.21'
 commands:
   aac:
     description: Main command
