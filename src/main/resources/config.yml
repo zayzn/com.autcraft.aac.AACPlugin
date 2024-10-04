@@ -17,7 +17,7 @@ settings:
 # Tool to use to get the player started
 # This will be an item that they can hold in their hand to click and open the GUI
 tool:
-  icon: knowledge_book
+  icon: feather
   name: Open AAC Interface
   lore: Click to open Augmentative and Alternative Communication Graphical Interface
 

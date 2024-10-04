@@ -253,9 +253,9 @@ public class InventoryGUI {
         lore.add(Component.text(panelTool.get("lore")));
 
         // Get the material, if there is one. If not, default it to knowledge book.
-        Material material = Material.getMaterial(panelTool.get("icon"));
+        Material material = Material.getMaterial(panelTool.get("icon").toUpperCase());
         if (material == null)
-            material = Material.KNOWLEDGE_BOOK;
+            material = Material.FEATHER;
 
         // Get the item stack and set data to it.
         ItemStack item = new ItemStack(material, 1);
@@ -264,6 +264,7 @@ public class InventoryGUI {
         // Set display and lore data
         meta.displayName(Component.text(displayName));
         meta.lore(lore);
+        meta.setEnchantmentGlintOverride(true);
 
         // Store persistent data as an identifier to know when this tool is being clicked
         meta.getPersistentDataContainer().set(this.namespacedKeyAACTool, PersistentDataType.STRING, "AAC_Tool");
