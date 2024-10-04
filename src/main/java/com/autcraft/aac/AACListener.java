@@ -108,8 +108,6 @@ public class AACListener implements Listener {
                     // Message sent successfully, now apply cooldown
                     addPlayerCooldown(player);
                 }
-            } else {
-                plugin.toConsole("Error: No output was stored because the plugin could not set the persistent data for the panel option.");
             }
         }
 
