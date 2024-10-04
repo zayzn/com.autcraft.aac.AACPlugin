@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +72,7 @@ public class AACListener implements Listener {
         }
 
         Component inventoryTitle = e.getView().title();
-        Component GUITitle = Component.text(plugin.getConfig().getString("settings.title"));
+        Component GUITitle = Component.text(Objects.requireNonNull(plugin.getConfig().getString("settings.title")));
 
         if (!inventoryTitle.equals(GUITitle)) return;
 

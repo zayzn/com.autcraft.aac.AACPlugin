@@ -87,14 +87,14 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
                 return false;
             }
 
+            // Get player based on args[1] given in command
+            Player player = Bukkit.getPlayerExact(args[1]);
             // Error: /aac give <player> command ran but player is not online
-            if (plugin.getServer().getPlayer(args[1]) == null) {
+            if (player == null) {
                 commandSender.sendMessage(plugin.errorMessage("error_player_not_online"));
                 return true;
             }
 
-            // Get player based on args[1] given in command
-            Player player = plugin.getServer().getPlayer(args[1]);
             InventoryGUI inventoryGUI = plugin.getInventoryGUI();
 
             player.getInventory().addItem(inventoryGUI.getTool());

@@ -74,7 +74,7 @@ public class InventoryGUI {
             return false;
         }
 
-        return meta.getPersistentDataContainer().get(this.namespacedKeyAACTool, PersistentDataType.STRING).equalsIgnoreCase("AAC_Tool");
+        return Objects.requireNonNull(meta.getPersistentDataContainer().get(this.namespacedKeyAACTool, PersistentDataType.STRING)).equalsIgnoreCase("AAC_Tool");
     }
 
 
@@ -101,7 +101,6 @@ public class InventoryGUI {
             return;
         }
         ItemMeta meta = itemStack.getItemMeta();
-        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
 
         meta.getPersistentDataContainer().set(this.namespacedKey, PersistentDataType.STRING, output);
         itemStack.setItemMeta(meta);
@@ -116,13 +115,13 @@ public class InventoryGUI {
 
         // Loop over the panel options in the config
         for (String path : Objects.requireNonNull(plugin.getConfig().getConfigurationSection("panel")).getKeys(false)) {
-            ItemStack itemStack = null;
+            ItemStack itemStack;
             String panelItem = "panel." + path;
             String icon = plugin.getConfig().getString(panelItem + ".icon", "");
             String name = plugin.getConfig().getString(panelItem + ".name", "");
             String playerName = plugin.getConfig().getString(panelItem + ".player", "");
             String texture = plugin.getConfig().getString(panelItem + ".texture", "");
-            List<Component> lore = new ArrayList<Component>();
+            List<Component> lore = new ArrayList<>();
             lore.add(Component.text(plugin.getConfig().getString(panelItem + ".lore", "")));
             String output = plugin.getConfig().getString(panelItem + ".output", "");
 
@@ -134,7 +133,7 @@ public class InventoryGUI {
             }
 
             // If material is set to player_head
-            if (icon.equalsIgnoreCase("PLAYER_HEAD") && (!texture.equals("") || !playerName.equals(""))) {
+            if (icon.equalsIgnoreCase("PLAYER_HEAD") && (!texture.isEmpty() || !playerName.isEmpty())) {
 
                 // Prioritize texture. If they entered one, they probably want it.
                 if (!texture.isEmpty()) {
@@ -146,7 +145,7 @@ public class InventoryGUI {
                     }
                 }
                 // Second is player name. If one is set, get the player's currect skin file
-                else if (!playerName.isEmpty()) {
+                else {
                     // Create the player head with texture and other info
                     itemStack = PlayerHeadUtil.getSkull(playerName, lore);
 
@@ -154,10 +153,6 @@ public class InventoryGUI {
                     if (itemStack == null) {
                         itemStack = new ItemStack(Material.PLAYER_HEAD, 1);
                     }
-                }
-                // If neither is set, just use the generic player head
-                else {
-                    itemStack = new ItemStack(Material.PLAYER_HEAD, 1);
                 }
 
                 // set Display and lore info
@@ -213,13 +208,13 @@ public class InventoryGUI {
         }
         int lastIndex = startIndex + endIndex;
 
-        ArrayList<String> sortedKeys = new ArrayList<String>(panelOptions.keySet());
+        ArrayList<String> sortedKeys = new ArrayList<>(panelOptions.keySet());
         Collections.sort(sortedKeys);
 
         String title = plugin.getConfig().getString("settings.title");
 
         // Create the inventory
-        Inventory inventory = plugin.getServer().createInventory(player, inventorySize, Component.text(title));
+        Inventory inventory = plugin.getServer().createInventory(player, inventorySize, Component.text(title == null ? "AAC - Communications Panel" : title));
 
         /*
          Loop over panel options to populate inventory
@@ -293,9 +288,9 @@ public class InventoryGUI {
 
         // Default check. We can't have a player head without a texture.
         // If it is blank, reset the material to a beacon.
-        if (materialName.equalsIgnoreCase("player_head") && texture.equals("")) {
+        if (materialName.equalsIgnoreCase("player_head") && (texture == null || texture.isEmpty())) {
             plugin.debug("Material is set to player head but texture is blank.");
-            materialName = "beacon";
+            return errorItem("unknown player head");
         }
 
         // Get material, if there is one
@@ -345,9 +340,9 @@ public class InventoryGUI {
 
         // Default check. We can't have a player head without a texture.
         // If it is blank, reset the material to a beacon.
-        if (materialName.equalsIgnoreCase("player_head") && texture.equals("")) {
+        if (materialName.equalsIgnoreCase("player_head") && (texture == null || texture.isEmpty())) {
             plugin.debug(plugin.getString("error_player_head_no_material"));
-            materialName = "beacon";
+            return errorItem("unknown player head");
         }
 
         // Get material, if there is one
