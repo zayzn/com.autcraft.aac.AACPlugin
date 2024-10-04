@@ -100,6 +100,7 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
             player.getInventory().addItem(inventoryGUI.getTool());
 
             commandSender.sendMessage(Component.text(plugin.getString("success_tool_given_to_player")).color(TextColor.color(60, 180, 180)));
+            return true;
         }
         return false;
     }
