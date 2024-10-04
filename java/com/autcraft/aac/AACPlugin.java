@@ -44,8 +44,6 @@ public final class AACPlugin extends JavaPlugin {
 
     /**
      * Reference to the inventory GUI
-     *
-     * @return
      */
     public InventoryGUI getInventoryGUI() {
         return this.inventoryGUI;
@@ -72,8 +70,6 @@ public final class AACPlugin extends JavaPlugin {
 
     /**
      * Return the string from config.yml corresponding to "key"
-     *
-     * @return
      */
     public String getString(String key) {
         return stringMap.get(key);
@@ -86,8 +82,6 @@ public final class AACPlugin extends JavaPlugin {
 
     /**
      * Send output directly to console regardless of debugging settings
-     *
-     * @param string
      */
     public void toConsole(String string) {
         getLogger().info(string);
@@ -95,9 +89,6 @@ public final class AACPlugin extends JavaPlugin {
 
     /**
      * Returns a text Component with the given string from config.yml
-     *
-     * @param errorString
-     * @return
      */
     public Component errorMessage(String errorString) {
         return Component.text(getString(errorString)).color(TextColor.color(190, 0, 0));
@@ -105,10 +96,6 @@ public final class AACPlugin extends JavaPlugin {
 
     /**
      * Returns a text Component with the given string but also replaces some text, based on replacements hashmap
-     *
-     * @param errorString
-     * @param replacements
-     * @return
      */
     public Component errorMessage(String errorString, HashMap<String, String> replacements) {
         String returnMessage = getString(errorString);

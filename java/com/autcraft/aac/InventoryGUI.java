@@ -216,9 +216,7 @@ public class InventoryGUI {
         // Create the inventory
         Inventory inventory = plugin.getServer().createInventory(player, inventorySize, Component.text(title == null ? "AAC - Communications Panel" : title));
 
-        /*
-         Loop over panel options to populate inventory
-        */
+        // Loop over panel options to populate inventory
         int slot = 0;
         int counter = 0;
 

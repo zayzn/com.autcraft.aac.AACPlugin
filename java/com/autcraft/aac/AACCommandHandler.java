@@ -11,7 +11,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.TreeSet;
 
 public class AACCommandHandler implements CommandExecutor, TabCompleter {
     private final AACPlugin plugin;
@@ -35,7 +37,6 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
             return true;
         }
 
-
         // Reload the config and re-initalize the panel items
         if (args[0].equalsIgnoreCase("reload")) {
             // Error: Invalid permission
@@ -50,7 +51,6 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
             commandSender.sendMessage(Component.text(plugin.getConfig().getString("settings.reloadtext")).color(TextColor.color(60, 180, 180)));
             return true;
         }
-
 
         // Get the knowledge book!
         if (args[0].equalsIgnoreCase("get")) {

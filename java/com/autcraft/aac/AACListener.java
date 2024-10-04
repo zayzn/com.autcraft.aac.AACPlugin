@@ -28,8 +28,6 @@ public class AACListener implements Listener {
 
     /**
      * Tool item (book) to open GUI
-     *
-     * @param e
      */
     @EventHandler(ignoreCancelled = true)
     public void playerOpensInventoryGUI(PlayerInteractEvent e) {
@@ -56,8 +54,6 @@ public class AACListener implements Listener {
 
     /**
      * Clicking an item in the GUI inventory screen
-     *
-     * @param e
      */
     @EventHandler(ignoreCancelled = true)
     public void playerMakesAACSelection(InventoryClickEvent e) {
@@ -123,9 +119,6 @@ public class AACListener implements Listener {
 
     /**
      * Return true or false if player is still within the cooldown cache
-     *
-     * @param player
-     * @return
      */
     private boolean isInCooldown(Player player) {
         var pid = player.getUniqueId();
@@ -141,9 +134,6 @@ public class AACListener implements Listener {
 
     /**
      * Get the amount of time remaining before next message can be sent
-     *
-     * @param player
-     * @return
      */
     private long getCooldownRemaining(Player player) {
         return TimeUnit.MILLISECONDS.toSeconds(cooldown.get(player.getUniqueId()) - System.currentTimeMillis());
@@ -151,8 +141,6 @@ public class AACListener implements Listener {
 
     /**
      * Add player to the cooldown cache
-     *
-     * @param player
      */
     private void addPlayerCooldown(Player player) {
         int cooldown_in_seconds = plugin.getConfig().getInt("settings.cooldown_in_seconds") * 1000;
