@@ -37,7 +37,7 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Reload the config and re-initalize the panel items
+        // Reload the config and re-initialize the panel items
         if (args[0].equalsIgnoreCase("reload")) {
             // Error: Invalid permission
             if (!commandSender.hasPermission("aac.reload")) {
@@ -52,7 +52,7 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Get the knowledge book!
+        // Get the AAC tool
         if (args[0].equalsIgnoreCase("get")) {
             // Error: Invalid permission
             if (!commandSender.hasPermission("aac.get")) {
@@ -73,7 +73,7 @@ public class AACCommandHandler implements CommandExecutor, TabCompleter {
             }
         }
 
-        // If the player is trying to give the book to another player
+        // Give the tool to a player
         if (args[0].equalsIgnoreCase("give")) {
             // Error: Invalid permission
             if (!commandSender.hasPermission("aac.give")) {

@@ -26,9 +26,6 @@ public class AACListener implements Listener {
         this.plugin = plugin;
     }
 
-    /**
-     * Tool item (book) to open GUI
-     */
     @EventHandler(ignoreCancelled = true)
     public void playerOpensInventoryGUI(PlayerInteractEvent e) {
         if (e.getAction() == Action.PHYSICAL) return;
@@ -53,9 +50,6 @@ public class AACListener implements Listener {
         e.setCancelled(true);
     }
 
-    /**
-     * Clicking an item in the GUI inventory screen
-     */
     @EventHandler(ignoreCancelled = true)
     public void playerMakesAACSelection(InventoryClickEvent e) {
 

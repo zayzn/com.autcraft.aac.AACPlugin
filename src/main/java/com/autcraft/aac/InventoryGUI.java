@@ -79,7 +79,7 @@ public class InventoryGUI {
 
 
     /**
-     * Returns the String value of the persistent data container for itemstack specified
+     * Returns the String value of the persistent data container for item stack specified
      */
     public String getPersistentDataContainer(ItemStack itemStack) {
         ItemMeta meta = itemStack.getItemMeta();
@@ -107,10 +107,10 @@ public class InventoryGUI {
     }
 
     /**
-     * Iinitialize the panel items by putting the itemstack data into a map
+     * Initialize the panel items by putting the item stack data into a map
      */
     public void initializePanelOptions() {
-        plugin.debug("Initirializing Panel from config.");
+        plugin.debug("Initializing Panel from config.");
         panelOptions.clear();
 
         // Loop over the panel options in the config

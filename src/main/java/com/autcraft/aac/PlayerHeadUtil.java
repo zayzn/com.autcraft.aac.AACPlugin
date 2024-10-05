@@ -26,6 +26,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * Utility for acquiring player head items with skins loaded from official API.
+ */
 public class PlayerHeadUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(PlayerHeadUtil.class);
@@ -33,7 +36,12 @@ public class PlayerHeadUtil {
     private static final JSONParser PARSER = new JSONParser();
 
     /**
-     * Retrieve a player head just from a player's name
+     * Retrieve a player head just from a player's name.
+     *
+     * @param playerName the registered name of the player
+     * @param lore       the lore of the returned item
+     * @return an {@code ItemStack} of the type {@code Material.PLAYER_HEAD} with the skin of the provided player name
+     * and the provided lore attached <i>or</i> {@code null} if the skin could not be loaded
      */
     public static @Nullable ItemStack getSkull(@NotNull String playerName, @NotNull List<Component> lore) {
         String uuid;
@@ -59,7 +67,19 @@ public class PlayerHeadUtil {
         return getSkull(UUID.randomUUID(), texture, Component.text(playerName), lore);
     }
 
-    public static @NotNull ItemStack getSkull(@NotNull UUID uuid, @NotNull String texture, @Nullable Component customName, @NotNull List<Component> lore) throws RuntimeException {
+    /**
+     * Retrieve a player head.
+     *
+     * @param uuid        the registered UUID of the player
+     * @param texture     base64 encoded JSON containing the skin's URL, e.g.
+     *                    {@code {"textures":{"SKIN":{"url":"http://textures.minecraft.net/texture/{id}"}}}}
+     * @param displayName the display name of the returned item
+     * @param lore        the lore of the returned item
+     * @return an {@code ItemStack} of the type {@code Material.PLAYER_HEAD} with the skin of the provided player and
+     * the provided options
+     * @throws RuntimeException if the provided texture is invalid or the skin failed to download
+     */
+    public static @NotNull ItemStack getSkull(@NotNull UUID uuid, @NotNull String texture, @Nullable Component displayName, @NotNull List<Component> lore) throws RuntimeException {
         // Create the item stack in advance
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
@@ -93,8 +113,8 @@ public class PlayerHeadUtil {
         meta.setOwningPlayer(Bukkit.getOfflinePlayer(Objects.requireNonNull(uuid)));
 
         // Display name
-        if (customName != null) {
-            meta.displayName(customName);
+        if (displayName != null) {
+            meta.displayName(displayName);
         }
 
         // Lore
@@ -108,7 +128,11 @@ public class PlayerHeadUtil {
     }
 
     /**
-     * Retrieve the player's UUID from just their name
+     * Retrieve the player's UUID from just their name.
+     *
+     * @param name the registered name of the player
+     * @return the String value of the player's unique id
+     * @throws IOException if communication with the Mojang API fails
      */
     public static @NotNull String getUUIDFromMojangByName(@NotNull String name) throws IOException {
         String uuid = null;
@@ -159,7 +183,7 @@ public class PlayerHeadUtil {
             uuid = result;
         } else {
             logger.error("could not determine id of {}", name);
-            throw new RuntimeException("uuid must not be null");
+            throw new RuntimeException("uuid unresolved");
         }
 
         return uuid;
@@ -167,7 +191,10 @@ public class PlayerHeadUtil {
 
 
     /**
-     * If getting a head for a player, we must retrieve the texture from Mojang's Session servers.
+     * Retrieve the skin of the player with the provided id from Mojang's Session servers.
+     *
+     * @param uuid the registered id of the player
+     * @return the encoded skin data
      */
     public static @NotNull String getSkinTextureByUUID(@NotNull UUID uuid) throws IOException, ParseException {
         String texture;
@@ -204,7 +231,6 @@ public class PlayerHeadUtil {
         }
 
         //Get the required object from the above created object
-        System.out.println(data_obj.values());
         texture = data_obj.get("properties").toString();
 
         return texture;
